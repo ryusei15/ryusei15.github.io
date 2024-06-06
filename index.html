@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>サイトのタイトル</title>
+  <style>
+    /* CSSスタイルをここに埋め込む */
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f0f0;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      background-color: #333;
+      color: #fff;
+      padding: 20px 0;
+    }
+
+    header nav ul {
+      list-style: none;
+    }
+
+    header nav ul li {
+      display: inline;
+      margin-right: 20px;
+    }
+
+    header nav ul li a {
+      color: #fff;
+      text-decoration: none;
+    }
+
+    .container {
+      width: 80%;
+      margin: auto;
+    }
+
+    .hero {
+      background-color: #f0f0f0;
+      padding: 100px 0;
+      text-align: center;
+    }
+
+    .hero h2 {
+      margin-bottom: 20px;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 10px 20px;
+      background-color: #007bff;
+      color: #fff;
+      text-decoration: none;
+      border-radius: 5px;
+    }
+
+    .btn:hover {
+      background-color: #0056b3;
+    }
+
+    .features {
+      padding: 50px 0;
+    }
+
+    .feature-item {
+      margin-bottom: 30px;
+    }
+
+    .feature-item img {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      border: 2px solid #007bff;
+    }
+
+    footer {
+      background-color: #333;
+      color: #fff;
+      padding: 20px 0;
+      text-align: center;
+    }
+
+
+
+    .form {
+        max-width: 600px;
+        margin: 20px auto;
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-group label {
+        display: block;
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+
+    .form-group input,
+    .form-group textarea {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 3px;
+    }
+
+    .form-group textarea {
+        height: 100px;
+    }
+
+    .btn {
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 3px;
+        cursor: pointer;
+    }
+
+    .btn:hover {
+        background-color: #0056b3;
+    }
+  </style>
+</head>
+<script>
+(function(PID){
+  var script = document.createElement("script");
+  script.src = "https://tracking.sitest.jp/tag?p=" + PID + "&u=" + encodeURIComponent(location.origin + location.pathname + location.search);
+  script.async = true;
+  document.head.appendChild(script);
+})("p66612cc7234e0");
+</script>
+<body>
+  </script>
+  <header>
+    <div class="container">
+      <h1>サイトのロゴ</h1>
+      <nav>
+        <ul>
+          <li><a href="#">ホーム</a></li>
+          <li><a href="#">機能</a></li>
+          <li><a href="#">料金</a></li>
+          <li><a href="#">お問い合わせ</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+ 
+
+  <section class="hero">
+    <div class="container">
+      <h2>新しい冒険が待っています</h2>
+      <p>サイトの説明やアピールポイントなどが入ります。</p>
+      <a href="#" class="btn">詳細を見る</a>
+    </div>
+  </section>
+  <a href="09091690000">電話リンク</a>
+  <a href="#link">ページ内リンク</a>
+  <a href="https://crossdomain.com">クロスドメイン設定時stp付与リンク</a>
+  <a href="https://notcrossdomain.com">クロスドメイン設定時stp未付与リンク</a>
+  <div class="form">
+    <h2>Form</h2>
+    <form action="#" method="post"id="f" >
+        <div class="form-group">
+            <label for="text">テキスト(text):</label>
+            <input type="text" id="text" name="text">
+        </div>
+        <div class="form-group">
+            <label for="email">メール(email):</label>
+            <input type="email" id="email" name="email">
+        </div>
+        <div class="form-group">
+            <label for="password">パスワード(password):</label>
+            <input type="password" id="password" name="password">
+        </div>
+        <div class="form-group">
+            <label for="textarea">テキストエリア(textarea):</label>
+            <textarea id="textarea" name="textarea" ></textarea>
+        </div>
+        <div class="form-group">
+            <label for="file">ファイル(file):</label>
+            <input type="file" id="file" name="file">
+        </div>
+        <div class="form-group">
+            <label for="date">日付(date):</label>
+            <input type="date" id="date" name="date">
+        </div>
+        <div class="form-group">
+            <label for="checkbox">チェックボックス(chexkbox):</label>
+            <input type="checkbox" id="checkbox" name="checkbox" value="1"> Checkbox
+        </div>
+        <div class="form-group">
+            <label for="radio">ラジオ(radio):</label>
+            <input type="radio" id="radio1" name="radio" value="option1"> Option 1
+            <input type="radio" id="radio2" name="radio" value="option2"> Option 2
+        </div>
+        <button type="submit" class="btn">Submit</button>
+    </form>
+</div>
+
+  <section class="features">
+    <div class="container">
+      <h2>機能一覧</h2>
+      <div class="feature-item">
+        <img src="https://placehold.jp/150x150.png" alt="機能1">
+        <h3>簡単な登録</h3>
+        <p>数分で登録し、すぐに利用を開始できます。</p>
+      </div>
+      <div class="feature-item">
+        <img src="https://placehold.jp/150x150.png" alt="機能2">
+        <h3>パーソナライズされた体験</h3>
+        <p>あなたの好みに合わせてカスタマイズされた内容を提供します。</p>
+      </div>
+      <div class="feature-item">
+        <img src="https://placehold.jp/150x150.png" alt="機能3">
+        <h3>24時間サポート</h3>
+        <p>困ったことがあれば、いつでもサポートが利用可能です。</p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container">
+      <p id="link">&copy; 2024 サイト名</p>
+    </div>
+  </footer>
+  <script>
+    // JavaScriptコードをここに埋め込む
+    // 例: キャッチフレーズをクリックするとアラートが表示される
+    document.querySelector('.hero h2').addEventListener('click', function() {
+      alert('新しい冒険が待っています！');
+    });
+  </script>
+</body>
+</html>
+
+
