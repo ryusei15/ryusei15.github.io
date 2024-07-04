@@ -240,14 +240,28 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 </div>
 
  <form action="#" method="post"id="d" >
-   インプット要素 クラス名 name
-   <input class="name" type="text"/>
-   sitest-privacy要素 クラス名 sitestーprivacy
-   <div class="sitestーprivacy">入力内容の例</div>
-   sitest-privacy要素内にinput要素 text-input2　sitestーprivacy > 
-   <div class="text-input2　sitestーprivacy"> name2
-     <input class="name2" type="text"/>
-   </div>
+   input1
+   <input class="name" type="text" value="input1"/><br>
+   div.sitest-privacy
+   <div class="sitestーprivacy">入力内容の例</div><br>
+   div.sitest-privacy > input
+   <div class="text-input2　sitestーprivacy">
+     <input class="name2" type="text" value="input2"/>
+     div.sitest-privacy > input.sitest-privacy
+     <input class="name2 sitest-privacy" type="text" value="input2"/>
+   </div><br>
+   select
+   <select>
+     <option value="1"></option>
+     <option value="2"></option>
+     <option value="3"></option>
+   </select><br>
+  select.sitest-privacy
+   <select>
+     <option value="1"></option>
+     <option value="2"></option>
+     <option value="3"></option>
+   </select>
    
  </form>
 
