@@ -186,7 +186,19 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 (function(e,d,a){
   console.log("screen hide");
 var b=document.createElement("style"),f="."+d+"{opacity:0 !important;filter:alpha(opacity=0) !important;background:none !important;}",c=document.getElementsByTagName("head")[0];b.setAttribute("type","text/css");b.setAttribute("class",d);if(b.styleSheet){b.styleSheet.cssText=f}else{b.appendChild(document.createTextNode(f))}c.appendChild(b);e.className+=" "+d;setHiddenStyle=function(){e.className=e.className.replace(RegExp(" ?"+d),"")};setTimeout(function(){setHiddenStyle()},a)
-})(document.documentElement,"sitest_hidden_style",3000);
+
+
+  let count = 0.00;
+
+// 1秒ごとにカウントアップする関数
+function countUp() {
+  count++;
+  console.log(count);
+}
+
+// 1000ミリ秒（1秒）ごとにcountUp関数を実行
+const timer = setInterval(countUp, 10);
+})(document.documentElement,"sitest_hidden_style",10000);
 </script> 
   
 <body>
