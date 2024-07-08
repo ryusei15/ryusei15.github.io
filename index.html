@@ -323,7 +323,23 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     });
   </script>
 <!-- 旧タグローカルタグ -->
-  <script src="http://127.0.0.1/tracking/sitest_js?p=p66723f5c54d96&dynamic=true" async></script><script type="text/javascript">window.sitest_sent_html = document.getElementsByTagName("html")[0].outerHTML;</script>
+  <script type="text/javascript">
+  (function(){
+    window.sitest_sent_html = document.getElementsByTagName("html")[0].outerHTML;
+    var pid = "p66723f5c54d96";
+    var dev = "";
+    if (navigator.userAgent){
+      dev = navigator.userAgent.match(/(android.*mobile|iphone|ipod|mobile\ssafari|iemobile|opera\smini|windows\sphone)/i)? "(sp)": "(pc)";
+    }else{
+      dev = "";
+    }
+    var name = dev + decodeURIComponent(location.hostname + location.pathname);
+    var script_elm = document.createElement("script");
+    script_elm.src = "http://127.0.0.1/tracking/sitest_js?p=" + pid + "&dynamic=true&urlname=" + encodeURIComponent(name);
+    script_elm.async = true;
+    document.head.appendChild(script_elm);
+  })();
+  </script>
 
 </body>
 </html>
