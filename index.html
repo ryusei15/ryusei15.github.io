@@ -175,18 +175,12 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   <script>
       //ローカル環境新タグ
   (function(PID){
-  var dev = "";
-  if (navigator.userAgent){
-    dev = navigator.userAgent.match(/(android.*mobile|iphone|ipod|mobilessafari|iemobile|operasmini|windowssphone)/i)? "(sp)": "(pc)";
-  }else{
-    dev = "";
-  }
   var name = dev + decodeURIComponent(location.hostname + location.pathname);
   var script = document.createElement("script");
   script.src = "http://127.0.0.1:8080/tag?p=" + PID + "&u=" + encodeURIComponent(location.origin + location.pathname + location.search) + "&n=" + name;
   script.async = true;
   document.head.appendChild(script);
-})("p66723f5c54d96");
+})("35");
   </script>
 
   
