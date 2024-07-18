@@ -175,7 +175,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   <script>
       //ローカル環境新タグ
   (function(PID){
-  var name = dev + decodeURIComponent(location.hostname + location.pathname);
+  var name = decodeURIComponent(location.hostname + location.pathname);
   var script = document.createElement("script");
   script.src = "http://127.0.0.1:8080/tag?p=" + PID + "&u=" + encodeURIComponent(location.origin + location.pathname + location.search) + "&n=" + name;
   script.async = true;
