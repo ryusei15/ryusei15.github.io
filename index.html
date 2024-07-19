@@ -1,6 +1,956 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
+  <script>(function () {
+  const handleSitestTemplateSliderAnimation = (slider, numOfTimes) => {
+    let isFinishedAnimetion = true;
+    const sliderWrapper = slider.querySelector(
+      ".sitest-template-slider__item-wrapper"
+    );
+    const dotsWrapper = slider.querySelector(
+      ".sitest-template-slider__dots-wrapper"
+    );
+    const dots = dotsWrapper.querySelectorAll("button");
+    const nextBtn = slider.querySelector(".sitest-template-slider__next-btn");
+    const prevBtn = slider.querySelector(".sitest-template-slider__prev-btn");
+    let sliderTextWrapHeights = [];
+    let selectedDotIndex = 0;
+    // スライドが切り替わるアニメーション時間
+    let time = 500;
+    // スライドが止まっている時間
+    const sliderStopTime = 4000;
+    let isLoop = false;
+    // スライドショー種別に合わせた width を設定
+    let sliderItemWidth;
+    let sliderWrapperMarginLeft;
+    let sliderItemGap = 0;
+
+    // スライドショー種別がシングルか判定
+    const isSingleType = (type) => {
+      return type === "single";
+    };
+    // 数値を小数点第三位で四捨五入
+    const thirdDigit = 100;
+    const roundToThirdDigit = (num) => {
+      const roundedNum = Math.round(num * thirdDigit) / thirdDigit;
+      return roundedNum;
+    };
+    const handleSliderItemWidth = () => {
+      const parentWidth = slider.clientWidth;
+      const sliderItems = sliderWrapper.querySelectorAll(
+        ".sitest-template-slider__item"
+      );
+      const sliderLength = sliderItems.length;
+      typeValue = sliderWrapper.dataset.sitestTemplateSliderType;
+      if (isSingleType(typeValue)) {
+        sliderItemGap = 0;
+        sliderItemWidth = roundToThirdDigit(parentWidth);
+        sliderWrapperMarginLeft = roundToThirdDigit(parentWidth);
+      } else {
+        if (parentWidth > 425) {
+          sliderItemGap = 32;
+          sliderItemWidth = roundToThirdDigit(parentWidth * 0.75);
+          sliderWrapperMarginLeft =
+            sliderItemWidth - (roundToThirdDigit(parentWidth * 0.25) - 64) / 2;
+        } else {
+          sliderItemGap = 24;
+          sliderItemWidth = roundToThirdDigit(parentWidth - 48);
+          sliderWrapperMarginLeft = roundToThirdDigit(parentWidth - 48);
+        }
+      }
+      sliderWrapperWidth =
+        sliderItemWidth * sliderLength +
+        sliderItemGap * (sliderLength - 1) +
+        "px";
+      sliderWrapper.style.width = sliderWrapperWidth;
+      sliderWrapper.style.marginLeft = -sliderWrapperMarginLeft + "px";
+      sliderItems.forEach((sliderItem) => {
+        sliderItem.style.width = sliderItemWidth + "px";
+        sliderItem.style.maxWidth = sliderItemWidth + "px";
+      });
+    };
+    handleSliderItemWidth();
+
+    // スライドショーのテキストの高さを一定に
+    if (["vertical", "horizontal"].includes(typeValue)) {
+      const textWrappers = slider.querySelectorAll(
+        ".sitest-template-slider__description-wrapper"
+      );
+      textWrappers.forEach((textWrapper) => {
+        sliderTextWrapHeights.push(textWrapper.getBoundingClientRect().height);
+      });
+      textWrapMaxHeight = roundToThirdDigit(Math.max(...sliderTextWrapHeights));
+      textWrappers.forEach((textWrapper) => {
+        textWrapper.style.height = textWrapMaxHeight + "px";
+      });
+    }
+
+    // アニメーション
+    const SingleSliderContractAnimation = (element, time) => {
+      element.animate(
+        [
+          // キーフレーム
+          { width: sliderItemWidth + "px" },
+          { width: "0" },
+        ],
+        {
+          // タイミングオプション
+          duration: time,
+          fill: "forwards",
+          easing: "linear",
+        }
+      );
+    };
+
+    const SingleSliderExtendAnimation = (element, time) => {
+      element.animate(
+        [
+          // キーフレーム
+          { width: "0" },
+          { width: sliderItemWidth + "px" },
+        ],
+        {
+          // タイミングオプション
+          duration: time,
+          fill: "forwards",
+          easing: "linear",
+        }
+      );
+    };
+
+    const addPrevSlider = (time) => {
+      isFinishedAnimetion = false;
+      sliderWrapper.lastElementChild.remove();
+      const num = Number(sliderWrapper.children.length) - 2;
+      const cloneItem = sliderWrapper.children[num].cloneNode(true);
+      SingleSliderExtendAnimation(cloneItem, time);
+      sliderWrapper.prepend(cloneItem);
+      dots[selectedDotIndex].dataset.sitestTemplateSliderDotState = "";
+      selectedDotIndex === 0
+        ? (selectedDotIndex = dots.length - 1)
+        : selectedDotIndex--;
+      dots[selectedDotIndex].dataset.sitestTemplateSliderDotState = "selected";
+      setTimeout(() => {
+        isFinishedAnimetion = true;
+      }, time);
+    };
+
+    const addNextSlider = (time) => {
+      isFinishedAnimetion = false;
+      SingleSliderContractAnimation(sliderWrapper.firstElementChild, time);
+      const cloneItem = sliderWrapper.children[2].cloneNode(true);
+
+      sliderWrapper.appendChild(cloneItem);
+      dots[selectedDotIndex].dataset.sitestTemplateSliderDotState = "";
+      selectedDotIndex === dots.length - 1
+        ? (selectedDotIndex = 0)
+        : selectedDotIndex++;
+      dots[selectedDotIndex].dataset.sitestTemplateSliderDotState = "selected";
+      setTimeout(() => {
+        sliderWrapper.firstElementChild.remove();
+        isFinishedAnimetion = true;
+      }, time);
+    };
+
+    // スライダー自動ループ停止
+    let stopTimeoutId;
+    const sliderLoopStopAnimation = () => {
+      // ループ処理が実行中の場合にのみ実行する
+      if (sliderAnimationInterval) {
+        clearInterval(sliderAnimationInterval);
+        sliderAnimationInterval = null;
+
+        // 5秒後に再度ループ処理を開始するタイマーをセットする
+        // アニメーション、待ち時間はまだ決まっていないので確認の必要がある
+        stopTimeoutId = setTimeout(sliderLoopStartAnimation, 5000);
+      }
+    };
+
+    // スライダー自動ループ
+    let sliderAnimationInterval;
+    const sliderLoopStartAnimation = () => {
+      if (isFinishedAnimetion && !sliderAnimationInterval) {
+        sliderAnimationInterval = setInterval(() => {
+          addNextSlider(time);
+        }, sliderStopTime);
+      } else {
+        sliderLoopStopAnimation();
+      }
+    };
+
+    // dot の操作によるスライダーの移動
+    const handleSliderForDot = (destination) => {
+      if (!isFinishedAnimetion) return;
+      sliderLoopStopAnimation();
+      sliderAnimationInterval = null;
+
+      const destinationNum = Number(destination);
+      const difference = Math.abs(destinationNum - selectedDotIndex);
+      let dotAnimationTime = Math.round(time / difference);
+
+      // difference の差分の分だけループ
+      let i = 0;
+      const dotAnimationInterval = setInterval(() => {
+        if (i >= difference) {
+          clearInterval(dotAnimationInterval);
+          return;
+        }
+        // isFinishedAnimetion が true になる前に実行されるのを防ぐ
+        const retryDotAnimationInterval = setInterval(() => {
+          if (isFinishedAnimetion) {
+            clearInterval(retryDotAnimationInterval);
+            // 表示されている画像より選択したドットが大きければ
+            if (selectedDotIndex < destinationNum) {
+              addNextSlider(dotAnimationTime);
+              // 表示されている画像より選択したドットが小さければ
+            } else if (selectedDotIndex > destinationNum) {
+              addPrevSlider(dotAnimationTime);
+            }
+          }
+        }, 10);
+        i++;
+      }, dotAnimationTime);
+    };
+
+    // クリックイベント
+    if (numOfTimes == "first") {
+      // ドット（スライドショー下部の丸）
+      dots.forEach((dot) => {
+        dot.addEventListener("click", () => {
+          const destination = dot.dataset.dotIndex;
+          handleSliderForDot(destination);
+        });
+      });
+
+      // 矢印
+      nextBtn.addEventListener("click", () => {
+        if (!isFinishedAnimetion) return;
+        sliderLoopStopAnimation();
+        sliderAnimationInterval = null;
+        addNextSlider(time);
+      });
+
+      prevBtn.addEventListener("click", () => {
+        if (!isFinishedAnimetion) return;
+        sliderLoopStopAnimation();
+        sliderAnimationInterval = null;
+        addPrevSlider(time);
+      });
+    }
+
+    // スライドショーのループ設定
+    if (isLoop) sliderLoopStartAnimation();
+
+    console.log("slider animation function loading completed");
+  };
+
+  // お客さまのサイトに反映後にイベントを設定
+  const sitestTemplateSliders = document.querySelectorAll(
+    ".sitest-template-slider"
+  );
+  sitestTemplateSliders.forEach(function (sitestTemplateSlider) {
+    handleSitestTemplateSliderAnimation(sitestTemplateSlider, "first");
+  });
+  window.addEventListener(
+    "resize",
+    function () {
+      sitestTemplateSliders.forEach(function (sitestTemplateSlider) {
+        handleSitestTemplateSliderAnimation(sitestTemplateSlider, "re");
+      });
+    },
+    false
+  );
+})();
+</script>
+  <style>
+  .sitest-template-slider {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
+.sitest-template-slider > .sitest-template-slider__item-wrapper {
+  /* flex: 重い時の動作微妙な気がする */
+  /* .sitest-template-slider__item-wrapper > .sitest-template-slider__item inline-flexを検討 */
+  display: flex;
+  justify-content: flex-start;
+
+  /* 追加style  property: default value; */
+  /* width: px; スライドショーの親要素の幅 */
+  /* height: px; */
+  /* margin-left: px; スライドショーの type によって変わる */
+}
+
+.sitest-template-slider > .sitest-template-slider__item-wrapper[data-sitest-template-slider-type="single"] {
+  gap: 0;
+}
+
+.sitest-template-slider > .sitest-template-slider__item-wrapper[data-sitest-template-slider-type="side"],
+.sitest-template-slider > .sitest-template-slider__item-wrapper[data-sitest-template-slider-type="vertical"],
+.sitest-template-slider__item-wrapper[data-sitest-template-slider-type="horizontal"] {
+  gap: 0 32px;
+}
+
+.sitest-template-slider > .sitest-template-slider__item-wrapper > .sitest-template-slider__item {
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  border-style: solid;
+  overflow: hidden;
+  flex-shrink: 0;
+
+  /* 追加style  property: default value; */
+  padding: 0px; /* "none" | "s" | "m" | "l" */
+  background-color: inherit; /* string (カラーコード) */
+  border: 0px solid inherit; /* border_width: 可変（制限なし）, border_color: string (カラーコード) */
+  border-radius: 0px; /* "none"（0px） | "s"（8px） | "m"（24px）*/
+}
+
+.sitest-template-slider > .sitest-template-slider__item-wrapper > .sitest-template-slider__item > a {
+  display: flex;
+  width: 100%;
+  margin: 0 auto;
+  /* -moz-transition: width 1s linear;
+  -webkit-transition: width 1s linear;  */
+  /* transition: width 1s linear; */
+
+  /* float: left; */
+  /* float: 100%以上のwidthを設定しても100%で折り返しが起きるため断念 */
+
+  /* vertical-align: top;
+  display: inline-block;
+  display: -ms-inline-flexbox;
+  display: inline-flex; */
+  /* inline-flex: flexより動きがいい気がするブラウザ検証で検討 */
+
+  /* 追加style  property: default value; */
+  flex-direction: unset; /* "right" (row-reverse) | "left" (row) | "bottom" (column-reverse) | "top" (column) */
+}
+
+.sitest-template-slider > .sitest-template-slider__item-wrapper[data-sitest-template-slider-type="horizontal"] > .sitest-template-slider__item > a {
+  gap: 0 16px;
+}
+@media screen and (max-width: 425px) {
+  .sitest-template-slider > .sitest-template-slider__item-wrapper[data-sitest-template-slider-type="horizontal"] > .sitest-template-slider__item > a {
+    flex-direction: column;
+    gap: 16px 0;
+  }
+}
+
+.sitest-template-slider > .sitest-template-slider__item-wrapper[data-sitest-template-slider-type="vertical"] > .sitest-template-slider__item > a {
+  flex-direction: column;
+  gap: 16px 0;
+}
+
+.sitest-template-slider > .sitest-template-slider__item-wrapper[data-sitest-template-slider-type="horizontal"] > .sitest-template-slider__item > a > * {
+  flex-basis: calc(50% - 8px);
+}
+
+.sitest-template-slider > .sitest-template-slider__item-wrapper > .sitest-template-slider__item > a > img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: 50% 50%;
+  overflow: hidden;
+
+  /* 追加style  property: default value; */
+  /*.sitest-template-slider__item に border-radius が当たっている際に img にも当たる */
+  /*.sitest-template-slider__item に padding が当たっている際は padding + border-radius が当たる */
+  border-radius: 0px;
+}
+
+/* テキスト */
+.sitest-template-slider > .sitest-template-slider__item-wrapper > .sitest-template-slider__item > a .sitest-template-slider__description-wrapper {
+  flex-shrink: 0;
+}
+
+.sitest-template-slider > .sitest-template-slider__item-wrapper > .sitest-template-slider__item .sitest-template-slider__title {
+  /* 追加style  property: default value; */
+  font-size: inherit; /* 12px ~ 32px */
+  color: inherit; /* string (カラーコード) */
+  text-decoration: inherit; /* null | "underline" | "line-through" | "underline line-through" */
+  font-style: normal; /* null | "italic" */
+  font-weight: normal; /* null | "bold"  */
+}
+
+.sitest-template-slider > .sitest-template-slider__item-wrapper[data-sitest-template-slider-type="vertical"] > .sitest-template-slider__item .sitest-template-slider__title,
+.sitest-template-slider > .sitest-template-slider__item-wrapper[data-sitest-template-slider-type="horizontal"] > .sitest-template-slider__item .sitest-template-slider__title {
+  margin: 0;
+}
+
+
+.sitest-template-slider > .sitest-template-slider__item-wrapper > .sitest-template-slider__item .sitest-template-slider__text {
+  /* 追加style  property: default value; */
+  font-size: inherit; /* 12px ~ 32px */
+  color: inherit; /* string (カラーコード) */
+  text-decoration: inherit; /* null | "underline" | "line-through" | "underline line-through" */
+  font-style: normal; /* null | "italic" */
+  font-weight: normal; /* null | "bold"  */
+}
+
+.sitest-template-slider > .sitest-template-slider__item-wrapper[data-sitest-template-slider-type="vertical"] > .sitest-template-slider__item .sitest-template-slider__text,
+.sitest-template-slider > .sitest-template-slider__item-wrapper[data-sitest-template-slider-type="horizontal"] > .sitest-template-slider__item .sitest-template-slider__text {
+  margin-top: 4px;
+  margin-bottom: 0;
+
+  /* 追加style  property: default value; */
+  font-size: inherit; /* 12px ~ 32px */
+  color: inherit; /* string (カラーコード) */
+  text-decoration: inherit; /* null | "underline" | "line-through" | "underline line-through" */
+  font-style: normal; /* null | "italic" */
+  font-weight: normal; /* null | "bold"  */
+}
+
+/* 矢印 */
+.sitest-template-slider > .sitest-template-slider__next-btn,
+.sitest-template-slider > .sitest-template-slider__prev-btn {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  top: calc(50% - 40px);
+  color: #000;
+  line-height: 40px;
+  text-align: center;
+  font-size: 32px;
+  border: none;
+  cursor: pointer;
+  outline: none;
+  padding: 0;
+  appearance: none;
+}
+
+.sitest-template-slider > .sitest-template-slider__next-btn {
+  right: 0;
+}
+.sitest-template-slider > .sitest-template-slider__prev-btn {
+  left: 0;
+}
+
+/* 矢印の画像 */
+.sitest-template-slider[data-sitest-template-slider-arrow-type="square-transparent"] > .sitest-template-slider__prev-btn {
+  background-image: url(https://storage.googleapis.com/sitest-assets/components/slider_arrow/slider_square_transparent_left_arrow.svg);
+  background-color: transparent;
+}
+.sitest-template-slider[data-sitest-template-slider-arrow-type="square-transparent"] > .sitest-template-slider__next-btn {
+  background-image: url(https://storage.googleapis.com/sitest-assets/components/slider_arrow/slider_square_transparent_right_arrow.svg);
+  background-color: transparent;
+}
+.sitest-template-slider[data-sitest-template-slider-arrow-type="square-black"] > .sitest-template-slider__prev-btn {
+  background-image: url(https://storage.googleapis.com/sitest-assets/components/slider_arrow/slider_square_black_left_arrow.svg);
+  background-color: transparent;
+}
+.sitest-template-slider[data-sitest-template-slider-arrow-type="square-black"] > .sitest-template-slider__next-btn {
+  background-image: url(https://storage.googleapis.com/sitest-assets/components/slider_arrow/slider_square_black_right_arrow.svg);
+  background-color: transparent;
+}
+.sitest-template-slider[data-sitest-template-slider-arrow-type="square-white"] > .sitest-template-slider__prev-btn {
+  background-image: url(https://storage.googleapis.com/sitest-assets/components/slider_arrow/slider_square_white_left_arrow.svg);
+  background-color: transparent;
+}
+.sitest-template-slider[data-sitest-template-slider-arrow-type="square-white"] > .sitest-template-slider__next-btn {
+  background-image: url(https://storage.googleapis.com/sitest-assets/components/slider_arrow/slider_square_white_right_arrow.svg);
+  background-color: transparent;
+}
+.sitest-template-slider[data-sitest-template-slider-arrow-type="round-black"] > .sitest-template-slider__prev-btn {
+  background-image: url(https://storage.googleapis.com/sitest-assets/components/slider_arrow/slider_round_black_left_arrow.svg);
+  background-color: transparent;
+}
+.sitest-template-slider[data-sitest-template-slider-arrow-type="round-black"] > .sitest-template-slider__next-btn {
+  background-image: url(https://storage.googleapis.com/sitest-assets/components/slider_arrow/slider_round_black_right_arrow.svg);
+  background-color: transparent;
+}
+.sitest-template-slider[data-sitest-template-slider-arrow-type="round-white"] > .sitest-template-slider__prev-btn {
+  background-image: url(https://storage.googleapis.com/sitest-assets/components/slider_arrow/slider_round_white_left_arrow.svg);
+  background-color: transparent;
+}
+.sitest-template-slider[data-sitest-template-slider-arrow-type="round-white"] > .sitest-template-slider__next-btn {
+  background-image: url(https://storage.googleapis.com/sitest-assets/components/slider_arrow/slider_round_white_right_arrow.svg);
+  background-color: transparent;
+}
+.sitest-template-slider[data-sitest-template-slider-arrow-type="none"] > .sitest-template-slider__prev-btn,
+.sitest-template-slider[data-sitest-template-slider-arrow-type="none"] > .sitest-template-slider__next-btn {
+  display: none;
+}
+
+.sitest-template-slider > .sitest-template-slider__dots-wrapper {
+  padding: 16px 0;
+  display: flex;
+  justify-content: center;
+  gap: 0 8px;
+}
+.sitest-template-slider > .sitest-template-slider__dots-wrapper > button {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: #c9c9c9;
+  border: none;
+  cursor: pointer;
+  outline: none;
+  padding: 0;
+  appearance: none;
+}
+.sitest-template-slider > .sitest-template-slider__dots-wrapper > button[data-sitest-template-slider-dot-state="selected"] {
+  background-color: #888888;
+}
+</style>
+  <style>.sitest-template-slider {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
+.sitest-template-slider > .sitest-template-slider__item-wrapper {
+  /* flex: 重い時の動作微妙な気がする */
+  /* .sitest-template-slider__item-wrapper > .sitest-template-slider__item inline-flexを検討 */
+  display: flex;
+  justify-content: flex-start;
+
+  /* 追加style  property: default value; */
+  /* width: px; スライドショーの親要素の幅 */
+  /* height: px; */
+  /* margin-left: px; スライドショーの type によって変わる */
+}
+
+.sitest-template-slider > .sitest-template-slider__item-wrapper[data-sitest-template-slider-type="single"] {
+  gap: 0;
+}
+
+.sitest-template-slider > .sitest-template-slider__item-wrapper[data-sitest-template-slider-type="side"],
+.sitest-template-slider > .sitest-template-slider__item-wrapper[data-sitest-template-slider-type="vertical"],
+.sitest-template-slider__item-wrapper[data-sitest-template-slider-type="horizontal"] {
+  gap: 0 32px;
+}
+
+.sitest-template-slider > .sitest-template-slider__item-wrapper > .sitest-template-slider__item {
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  border-style: solid;
+  overflow: hidden;
+  flex-shrink: 0;
+
+  /* 追加style  property: default value; */
+  padding: 0px; /* "none" | "s" | "m" | "l" */
+  background-color: inherit; /* string (カラーコード) */
+  border: 0px solid inherit; /* border_width: 可変（制限なし）, border_color: string (カラーコード) */
+  border-radius: 0px; /* "none"（0px） | "s"（8px） | "m"（24px）*/
+}
+
+.sitest-template-slider > .sitest-template-slider__item-wrapper > .sitest-template-slider__item > a {
+  display: flex;
+  width: 100%;
+  margin: 0 auto;
+  /* -moz-transition: width 1s linear;
+  -webkit-transition: width 1s linear;  */
+  /* transition: width 1s linear; */
+
+  /* float: left; */
+  /* float: 100%以上のwidthを設定しても100%で折り返しが起きるため断念 */
+
+  /* vertical-align: top;
+  display: inline-block;
+  display: -ms-inline-flexbox;
+  display: inline-flex; */
+  /* inline-flex: flexより動きがいい気がするブラウザ検証で検討 */
+
+  /* 追加style  property: default value; */
+  flex-direction: unset; /* "right" (row-reverse) | "left" (row) | "bottom" (column-reverse) | "top" (column) */
+}
+
+.sitest-template-slider > .sitest-template-slider__item-wrapper[data-sitest-template-slider-type="horizontal"] > .sitest-template-slider__item > a {
+  gap: 0 16px;
+}
+@media screen and (max-width: 425px) {
+  .sitest-template-slider > .sitest-template-slider__item-wrapper[data-sitest-template-slider-type="horizontal"] > .sitest-template-slider__item > a {
+    flex-direction: column;
+    gap: 16px 0;
+  }
+}
+
+.sitest-template-slider > .sitest-template-slider__item-wrapper[data-sitest-template-slider-type="vertical"] > .sitest-template-slider__item > a {
+  flex-direction: column;
+  gap: 16px 0;
+}
+
+.sitest-template-slider > .sitest-template-slider__item-wrapper[data-sitest-template-slider-type="horizontal"] > .sitest-template-slider__item > a > * {
+  flex-basis: calc(50% - 8px);
+}
+
+.sitest-template-slider > .sitest-template-slider__item-wrapper > .sitest-template-slider__item > a > img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: 50% 50%;
+  overflow: hidden;
+
+  /* 追加style  property: default value; */
+  /*.sitest-template-slider__item に border-radius が当たっている際に img にも当たる */
+  /*.sitest-template-slider__item に padding が当たっている際は padding + border-radius が当たる */
+  border-radius: 0px;
+}
+
+/* テキスト */
+.sitest-template-slider > .sitest-template-slider__item-wrapper > .sitest-template-slider__item > a .sitest-template-slider__description-wrapper {
+  flex-shrink: 0;
+}
+
+.sitest-template-slider > .sitest-template-slider__item-wrapper > .sitest-template-slider__item .sitest-template-slider__title {
+  /* 追加style  property: default value; */
+  font-size: inherit; /* 12px ~ 32px */
+  color: inherit; /* string (カラーコード) */
+  text-decoration: inherit; /* null | "underline" | "line-through" | "underline line-through" */
+  font-style: normal; /* null | "italic" */
+  font-weight: normal; /* null | "bold"  */
+}
+
+.sitest-template-slider > .sitest-template-slider__item-wrapper[data-sitest-template-slider-type="vertical"] > .sitest-template-slider__item .sitest-template-slider__title,
+.sitest-template-slider > .sitest-template-slider__item-wrapper[data-sitest-template-slider-type="horizontal"] > .sitest-template-slider__item .sitest-template-slider__title {
+  margin: 0;
+}
+
+
+.sitest-template-slider > .sitest-template-slider__item-wrapper > .sitest-template-slider__item .sitest-template-slider__text {
+  /* 追加style  property: default value; */
+  font-size: inherit; /* 12px ~ 32px */
+  color: inherit; /* string (カラーコード) */
+  text-decoration: inherit; /* null | "underline" | "line-through" | "underline line-through" */
+  font-style: normal; /* null | "italic" */
+  font-weight: normal; /* null | "bold"  */
+}
+
+.sitest-template-slider > .sitest-template-slider__item-wrapper[data-sitest-template-slider-type="vertical"] > .sitest-template-slider__item .sitest-template-slider__text,
+.sitest-template-slider > .sitest-template-slider__item-wrapper[data-sitest-template-slider-type="horizontal"] > .sitest-template-slider__item .sitest-template-slider__text {
+  margin-top: 4px;
+  margin-bottom: 0;
+
+  /* 追加style  property: default value; */
+  font-size: inherit; /* 12px ~ 32px */
+  color: inherit; /* string (カラーコード) */
+  text-decoration: inherit; /* null | "underline" | "line-through" | "underline line-through" */
+  font-style: normal; /* null | "italic" */
+  font-weight: normal; /* null | "bold"  */
+}
+
+/* 矢印 */
+.sitest-template-slider > .sitest-template-slider__next-btn,
+.sitest-template-slider > .sitest-template-slider__prev-btn {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  top: calc(50% - 40px);
+  color: #000;
+  line-height: 40px;
+  text-align: center;
+  font-size: 32px;
+  border: none;
+  cursor: pointer;
+  outline: none;
+  padding: 0;
+  appearance: none;
+}
+
+.sitest-template-slider > .sitest-template-slider__next-btn {
+  right: 0;
+}
+.sitest-template-slider > .sitest-template-slider__prev-btn {
+  left: 0;
+}
+
+/* 矢印の画像 */
+.sitest-template-slider[data-sitest-template-slider-arrow-type="square-transparent"] > .sitest-template-slider__prev-btn {
+  background-image: url(https://storage.googleapis.com/sitest-assets/components/slider_arrow/slider_square_transparent_left_arrow.svg);
+  background-color: transparent;
+}
+.sitest-template-slider[data-sitest-template-slider-arrow-type="square-transparent"] > .sitest-template-slider__next-btn {
+  background-image: url(https://storage.googleapis.com/sitest-assets/components/slider_arrow/slider_square_transparent_right_arrow.svg);
+  background-color: transparent;
+}
+.sitest-template-slider[data-sitest-template-slider-arrow-type="square-black"] > .sitest-template-slider__prev-btn {
+  background-image: url(https://storage.googleapis.com/sitest-assets/components/slider_arrow/slider_square_black_left_arrow.svg);
+  background-color: transparent;
+}
+.sitest-template-slider[data-sitest-template-slider-arrow-type="square-black"] > .sitest-template-slider__next-btn {
+  background-image: url(https://storage.googleapis.com/sitest-assets/components/slider_arrow/slider_square_black_right_arrow.svg);
+  background-color: transparent;
+}
+.sitest-template-slider[data-sitest-template-slider-arrow-type="square-white"] > .sitest-template-slider__prev-btn {
+  background-image: url(https://storage.googleapis.com/sitest-assets/components/slider_arrow/slider_square_white_left_arrow.svg);
+  background-color: transparent;
+}
+.sitest-template-slider[data-sitest-template-slider-arrow-type="square-white"] > .sitest-template-slider__next-btn {
+  background-image: url(https://storage.googleapis.com/sitest-assets/components/slider_arrow/slider_square_white_right_arrow.svg);
+  background-color: transparent;
+}
+.sitest-template-slider[data-sitest-template-slider-arrow-type="round-black"] > .sitest-template-slider__prev-btn {
+  background-image: url(https://storage.googleapis.com/sitest-assets/components/slider_arrow/slider_round_black_left_arrow.svg);
+  background-color: transparent;
+}
+.sitest-template-slider[data-sitest-template-slider-arrow-type="round-black"] > .sitest-template-slider__next-btn {
+  background-image: url(https://storage.googleapis.com/sitest-assets/components/slider_arrow/slider_round_black_right_arrow.svg);
+  background-color: transparent;
+}
+.sitest-template-slider[data-sitest-template-slider-arrow-type="round-white"] > .sitest-template-slider__prev-btn {
+  background-image: url(https://storage.googleapis.com/sitest-assets/components/slider_arrow/slider_round_white_left_arrow.svg);
+  background-color: transparent;
+}
+.sitest-template-slider[data-sitest-template-slider-arrow-type="round-white"] > .sitest-template-slider__next-btn {
+  background-image: url(https://storage.googleapis.com/sitest-assets/components/slider_arrow/slider_round_white_right_arrow.svg);
+  background-color: transparent;
+}
+.sitest-template-slider[data-sitest-template-slider-arrow-type="none"] > .sitest-template-slider__prev-btn,
+.sitest-template-slider[data-sitest-template-slider-arrow-type="none"] > .sitest-template-slider__next-btn {
+  display: none;
+}
+
+.sitest-template-slider > .sitest-template-slider__dots-wrapper {
+  padding: 16px 0;
+  display: flex;
+  justify-content: center;
+  gap: 0 8px;
+}
+.sitest-template-slider > .sitest-template-slider__dots-wrapper > button {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: #c9c9c9;
+  border: none;
+  cursor: pointer;
+  outline: none;
+  padding: 0;
+  appearance: none;
+}
+.sitest-template-slider > .sitest-template-slider__dots-wrapper > button[data-sitest-template-slider-dot-state="selected"] {
+  background-color: #888888;
+}
+</style>
+  <style>.sitest-template-slider {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
+.sitest-template-slider > .sitest-template-slider__item-wrapper {
+  /* flex: 重い時の動作微妙な気がする */
+  /* .sitest-template-slider__item-wrapper > .sitest-template-slider__item inline-flexを検討 */
+  display: flex;
+  justify-content: flex-start;
+
+  /* 追加style  property: default value; */
+  /* width: px; スライドショーの親要素の幅 */
+  /* height: px; */
+  /* margin-left: px; スライドショーの type によって変わる */
+}
+
+.sitest-template-slider > .sitest-template-slider__item-wrapper[data-sitest-template-slider-type="single"] {
+  gap: 0;
+}
+
+.sitest-template-slider > .sitest-template-slider__item-wrapper[data-sitest-template-slider-type="side"],
+.sitest-template-slider > .sitest-template-slider__item-wrapper[data-sitest-template-slider-type="vertical"],
+.sitest-template-slider__item-wrapper[data-sitest-template-slider-type="horizontal"] {
+  gap: 0 32px;
+}
+
+.sitest-template-slider > .sitest-template-slider__item-wrapper > .sitest-template-slider__item {
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  border-style: solid;
+  overflow: hidden;
+  flex-shrink: 0;
+
+  /* 追加style  property: default value; */
+  padding: 0px; /* "none" | "s" | "m" | "l" */
+  background-color: inherit; /* string (カラーコード) */
+  border: 0px solid inherit; /* border_width: 可変（制限なし）, border_color: string (カラーコード) */
+  border-radius: 0px; /* "none"（0px） | "s"（8px） | "m"（24px）*/
+}
+
+.sitest-template-slider > .sitest-template-slider__item-wrapper > .sitest-template-slider__item > a {
+  display: flex;
+  width: 100%;
+  margin: 0 auto;
+  /* -moz-transition: width 1s linear;
+  -webkit-transition: width 1s linear;  */
+  /* transition: width 1s linear; */
+
+  /* float: left; */
+  /* float: 100%以上のwidthを設定しても100%で折り返しが起きるため断念 */
+
+  /* vertical-align: top;
+  display: inline-block;
+  display: -ms-inline-flexbox;
+  display: inline-flex; */
+  /* inline-flex: flexより動きがいい気がするブラウザ検証で検討 */
+
+  /* 追加style  property: default value; */
+  flex-direction: unset; /* "right" (row-reverse) | "left" (row) | "bottom" (column-reverse) | "top" (column) */
+}
+
+.sitest-template-slider > .sitest-template-slider__item-wrapper[data-sitest-template-slider-type="horizontal"] > .sitest-template-slider__item > a {
+  gap: 0 16px;
+}
+@media screen and (max-width: 425px) {
+  .sitest-template-slider > .sitest-template-slider__item-wrapper[data-sitest-template-slider-type="horizontal"] > .sitest-template-slider__item > a {
+    flex-direction: column;
+    gap: 16px 0;
+  }
+}
+
+.sitest-template-slider > .sitest-template-slider__item-wrapper[data-sitest-template-slider-type="vertical"] > .sitest-template-slider__item > a {
+  flex-direction: column;
+  gap: 16px 0;
+}
+
+.sitest-template-slider > .sitest-template-slider__item-wrapper[data-sitest-template-slider-type="horizontal"] > .sitest-template-slider__item > a > * {
+  flex-basis: calc(50% - 8px);
+}
+
+.sitest-template-slider > .sitest-template-slider__item-wrapper > .sitest-template-slider__item > a > img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: 50% 50%;
+  overflow: hidden;
+
+  /* 追加style  property: default value; */
+  /*.sitest-template-slider__item に border-radius が当たっている際に img にも当たる */
+  /*.sitest-template-slider__item に padding が当たっている際は padding + border-radius が当たる */
+  border-radius: 0px;
+}
+
+/* テキスト */
+.sitest-template-slider > .sitest-template-slider__item-wrapper > .sitest-template-slider__item > a .sitest-template-slider__description-wrapper {
+  flex-shrink: 0;
+}
+
+.sitest-template-slider > .sitest-template-slider__item-wrapper > .sitest-template-slider__item .sitest-template-slider__title {
+  /* 追加style  property: default value; */
+  font-size: inherit; /* 12px ~ 32px */
+  color: inherit; /* string (カラーコード) */
+  text-decoration: inherit; /* null | "underline" | "line-through" | "underline line-through" */
+  font-style: normal; /* null | "italic" */
+  font-weight: normal; /* null | "bold"  */
+}
+
+.sitest-template-slider > .sitest-template-slider__item-wrapper[data-sitest-template-slider-type="vertical"] > .sitest-template-slider__item .sitest-template-slider__title,
+.sitest-template-slider > .sitest-template-slider__item-wrapper[data-sitest-template-slider-type="horizontal"] > .sitest-template-slider__item .sitest-template-slider__title {
+  margin: 0;
+}
+
+
+.sitest-template-slider > .sitest-template-slider__item-wrapper > .sitest-template-slider__item .sitest-template-slider__text {
+  /* 追加style  property: default value; */
+  font-size: inherit; /* 12px ~ 32px */
+  color: inherit; /* string (カラーコード) */
+  text-decoration: inherit; /* null | "underline" | "line-through" | "underline line-through" */
+  font-style: normal; /* null | "italic" */
+  font-weight: normal; /* null | "bold"  */
+}
+
+.sitest-template-slider > .sitest-template-slider__item-wrapper[data-sitest-template-slider-type="vertical"] > .sitest-template-slider__item .sitest-template-slider__text,
+.sitest-template-slider > .sitest-template-slider__item-wrapper[data-sitest-template-slider-type="horizontal"] > .sitest-template-slider__item .sitest-template-slider__text {
+  margin-top: 4px;
+  margin-bottom: 0;
+
+  /* 追加style  property: default value; */
+  font-size: inherit; /* 12px ~ 32px */
+  color: inherit; /* string (カラーコード) */
+  text-decoration: inherit; /* null | "underline" | "line-through" | "underline line-through" */
+  font-style: normal; /* null | "italic" */
+  font-weight: normal; /* null | "bold"  */
+}
+
+/* 矢印 */
+.sitest-template-slider > .sitest-template-slider__next-btn,
+.sitest-template-slider > .sitest-template-slider__prev-btn {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  top: calc(50% - 40px);
+  color: #000;
+  line-height: 40px;
+  text-align: center;
+  font-size: 32px;
+  border: none;
+  cursor: pointer;
+  outline: none;
+  padding: 0;
+  appearance: none;
+}
+
+.sitest-template-slider > .sitest-template-slider__next-btn {
+  right: 0;
+}
+.sitest-template-slider > .sitest-template-slider__prev-btn {
+  left: 0;
+}
+
+/* 矢印の画像 */
+.sitest-template-slider[data-sitest-template-slider-arrow-type="square-transparent"] > .sitest-template-slider__prev-btn {
+  background-image: url(https://storage.googleapis.com/sitest-assets/components/slider_arrow/slider_square_transparent_left_arrow.svg);
+  background-color: transparent;
+}
+.sitest-template-slider[data-sitest-template-slider-arrow-type="square-transparent"] > .sitest-template-slider__next-btn {
+  background-image: url(https://storage.googleapis.com/sitest-assets/components/slider_arrow/slider_square_transparent_right_arrow.svg);
+  background-color: transparent;
+}
+.sitest-template-slider[data-sitest-template-slider-arrow-type="square-black"] > .sitest-template-slider__prev-btn {
+  background-image: url(https://storage.googleapis.com/sitest-assets/components/slider_arrow/slider_square_black_left_arrow.svg);
+  background-color: transparent;
+}
+.sitest-template-slider[data-sitest-template-slider-arrow-type="square-black"] > .sitest-template-slider__next-btn {
+  background-image: url(https://storage.googleapis.com/sitest-assets/components/slider_arrow/slider_square_black_right_arrow.svg);
+  background-color: transparent;
+}
+.sitest-template-slider[data-sitest-template-slider-arrow-type="square-white"] > .sitest-template-slider__prev-btn {
+  background-image: url(https://storage.googleapis.com/sitest-assets/components/slider_arrow/slider_square_white_left_arrow.svg);
+  background-color: transparent;
+}
+.sitest-template-slider[data-sitest-template-slider-arrow-type="square-white"] > .sitest-template-slider__next-btn {
+  background-image: url(https://storage.googleapis.com/sitest-assets/components/slider_arrow/slider_square_white_right_arrow.svg);
+  background-color: transparent;
+}
+.sitest-template-slider[data-sitest-template-slider-arrow-type="round-black"] > .sitest-template-slider__prev-btn {
+  background-image: url(https://storage.googleapis.com/sitest-assets/components/slider_arrow/slider_round_black_left_arrow.svg);
+  background-color: transparent;
+}
+.sitest-template-slider[data-sitest-template-slider-arrow-type="round-black"] > .sitest-template-slider__next-btn {
+  background-image: url(https://storage.googleapis.com/sitest-assets/components/slider_arrow/slider_round_black_right_arrow.svg);
+  background-color: transparent;
+}
+.sitest-template-slider[data-sitest-template-slider-arrow-type="round-white"] > .sitest-template-slider__prev-btn {
+  background-image: url(https://storage.googleapis.com/sitest-assets/components/slider_arrow/slider_round_white_left_arrow.svg);
+  background-color: transparent;
+}
+.sitest-template-slider[data-sitest-template-slider-arrow-type="round-white"] > .sitest-template-slider__next-btn {
+  background-image: url(https://storage.googleapis.com/sitest-assets/components/slider_arrow/slider_round_white_right_arrow.svg);
+  background-color: transparent;
+}
+.sitest-template-slider[data-sitest-template-slider-arrow-type="none"] > .sitest-template-slider__prev-btn,
+.sitest-template-slider[data-sitest-template-slider-arrow-type="none"] > .sitest-template-slider__next-btn {
+  display: none;
+}
+
+.sitest-template-slider > .sitest-template-slider__dots-wrapper {
+  padding: 16px 0;
+  display: flex;
+  justify-content: center;
+  gap: 0 8px;
+}
+.sitest-template-slider > .sitest-template-slider__dots-wrapper > button {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: #c9c9c9;
+  border: none;
+  cursor: pointer;
+  outline: none;
+  padding: 0;
+  appearance: none;
+}
+.sitest-template-slider > .sitest-template-slider__dots-wrapper > button[data-sitest-template-slider-dot-state="selected"] {
+  background-color: #888888;
+}
+</style>
+  
   <!-- Google Tag Manager -->
 <!-- <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
 new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
