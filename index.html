@@ -155,14 +155,14 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 })("p667ba7d836075");
 </script> -->
 
-  <!-- <script>
+  <script>
       //stg環境
   (function(PID){ var script = document.createElement("script"); script.src =
   "https://tracking-dev.sitest.jp/tag?p=" + PID + "&u=" +
   encodeURIComponent(location.origin + location.pathname + location.search) + "&n=" + encodeURIComponent("index.html");
   script.async = true; document.head.appendChild(script);
   })("p66612cc7234e0");
-</script> -->
+</script>
   
  <!--  <script>
       //vn-stg環境
@@ -173,7 +173,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   })("p66612cc7234e0");
 </script> -->
   
-  <script>
+  <!-- <script>
       //ローカル環境新タグ
   (function(PID){
   var name = decodeURIComponent(location.hostname + location.pathname);
@@ -183,7 +183,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   document.head.appendChild(script);
 })("35");
   </script>
-
+ -->
   
 <body>
   <!-- Google Tag Manager (noscript) -->
@@ -223,15 +223,16 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <a href="https://crossdomain.com">クロスドメイン設定時stp付与リンク</a>
   <a href="https://notcrossdomain.com">クロスドメイン設定時stp未付与リンク</a>
   <input type="radio" id="a2" name="radio" value="option1"> Option 1
+  
   <div class="form">
     <h2>Form</h2>
     <form action="#" method="post"id="f" >
-        <div class="form-group">
+        <div class="form-group sitest-privacy" >
             <label for="text">テキスト(text):</label>
         </div>
         <div class="form-group">
             <label for="email">メール(email):</label>
-            <input type="email" id="email" name="email">
+            <input type="email" id="email" name="email" value="do masking">
         </div>
         <div class="form-group">
             <label for="password">パスワード(password):</label>
@@ -239,7 +240,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         </div>
         <div class="form-group">
             <label for="textarea">テキストエリア(textarea):</label>
-            <textarea id="textarea" name="textarea" ></textarea>
+            <textarea id="textarea" name="textarea"></textarea>
         </div>
         <div class="form-group">
             <label for="file">ファイル(file):</label>
@@ -257,6 +258,13 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <label for="radio">ラジオ(radio):</label>
             <input type="radio" id="radio1" name="radio" value="option1"> Option 1
             <input type="radio" id="radio2" name="radio" value="option2"> Option 2
+        </div>
+        <div class="select">
+            <select class="sitest-privacy">
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+            </select>
         </div>
         <button type="submit" class="btn">Submit</button>
     </form>
