@@ -142,10 +142,10 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 (function(e,d,a){
   console.log("screen hide");
   var b=document.createElement("style"),f="."+d+"{opacity:0 !important;filter:alpha(opacity=0) !important;background:none !important;}",c=document.getElementsByTagName("head")[0];b.setAttribute("type","text/css");b.setAttribute("class",d);if(b.styleSheet){b.styleSheet.cssText=f}else{b.appendChild(document.createTextNode(f))}c.appendChild(b);e.className+=" "+d;setHiddenStyle=function(){e.className=e.className.replace(RegExp(" ?"+d),"")};setTimeout(function(){setHiddenStyle()},a)
-})(document.documentElement,"sitest_hidden_style",10000);
+})(document.documentElement,"sitest_hidden_style",5000);
 </script> 
 </head>
-  <script>
+  <!-- <script>
 (function(PID){
   //本番環境平井
   var script = document.createElement("script");
@@ -153,7 +153,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   script.async = true;
   document.head.appendChild(script);
 })("p667ba7d836075");
-</script>
+</script> -->
 
   <!-- <script>
       //stg環境
