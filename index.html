@@ -13,6 +13,50 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   <title>サイトのタイトル</title>
   <style>
     /* CSSスタイルをここに埋め込む */
+
+    /* styles.css */
+.container {
+    padding: 20px;
+    border: 1px solid #000;
+}
+
+.pseudo-elements {
+    position: relative;
+    padding: 10px;
+    background-color: #f0f0f0;
+    color: #333;
+}
+
+/* 擬似要素のスタイル */
+.pseudo-elements::before {
+    content: "Before";
+    position: absolute;
+    top: -20px;
+    left: 0;
+    background-color: #ff0;
+    padding: 5px;
+    font-size: 12px;
+}
+
+.pseudo-elements::after {
+    content: "After";
+    position: absolute;
+    bottom: -20px;
+    right: 0;
+    background-color: #ff0;
+    padding: 5px;
+    font-size: 12px;
+}
+
+.pseudo-elements::first-line {
+    font-weight: bold;
+    color: #ff0000;
+}
+
+.pseudo-elements::first-letter {
+    font-size: 200%;
+    color: #0000ff;
+}
     body {
       font-family: Arial, sans-serif;
       background-color: #f0f0f0;
@@ -222,6 +266,13 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       <a href="#" class="btn">詳細を見る</a>
     </div>
   </section>
+
+  <div class="container">
+        <div class="pseudo-elements">
+            擬似要素を含む要素
+        </div>
+    </div>
+  
 
   <input type="text">
   <a href="09091690000">電話リンク</a>
