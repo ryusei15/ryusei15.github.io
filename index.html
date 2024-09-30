@@ -278,7 +278,61 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   <form method="get" action="exsample.com">
     <button>送信</button>
   </form>
-  
+  <div class="form-container">
+        <form id="applicationForm">
+            <div class="step step-1">
+                <h2>ステップ 1</h2>
+                <label for="name">お名前:</label>
+                <input type="text" id="name" name="name" required>
+                <button type="button" class="next-btn">次へ</button>
+            </div>
+
+            <div class="step step-2" style="display: none;">
+                <h2>ステップ 2</h2>
+                <label for="email">メールアドレス:</label>
+                <input type="email" id="email" name="email" required>
+                <button type="button" class="prev-btn">戻る</button>
+                <button type="button" class="next-btn">次へ</button>
+            </div>
+
+            <div class="step step-3" style="display: none;">
+                <h2>ステップ 3</h2>
+                <label for="phone">電話番号:</label>
+                <input type="tel" id="phone" name="phone" required>
+                <button type="button" class="prev-btn">戻る</button>
+                <button type="submit">申し込む</button>
+            </div>
+        </form>
+    </div>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+    const nextButtons = document.querySelectorAll('.next-btn');
+    const prevButtons = document.querySelectorAll('.prev-btn');
+    const steps = document.querySelectorAll('.step');
+
+    nextButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const currentStep = button.closest('.step');
+            currentStep.style.display = 'none';
+            currentStep.nextElementSibling.style.display = 'block';
+        });
+    });
+
+    prevButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const currentStep = button.closest('.step');
+            currentStep.style.display = 'none';
+            currentStep.previousElementSibling.style.display = 'block';
+        });
+    });
+
+    const form = document.getElementById('applicationForm');
+    form.addEventListener('submit', (event) => {
+        event.preventDefault();
+        alert('申し込みが完了しました！');
+    });
+});
+  </script>
   <div class="form">
     <h2>Form</h2>
     <form action="#" method="post"id="f" >
