@@ -7,7 +7,6 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 
-    
 <body>
     <header>
         <nav>
@@ -20,36 +19,36 @@
         </nav>
     </header>
     <main>
-       <form id="myForm" class="11111">
-        <label for="name">名前</label>
-        <input type="text" id="name" name="name" required>
-
-        <label for="email">メールアドレス</label>
-        <input type="email" id="email" name="email" required>
-
-        <label for="age">年齢</label>
-        <input type="number" id="age" name="age" required>
-
-        <label for="message">メッセージ</label>
-        <input type="text" id="message" name="message" required>
-
-        <button type="submit">送信</button>
-    </form>
-
-    <script>
-        document.getElementById('myForm').addEventListener('submit', function(event) {
-            event.preventDefault();
-
-            const formData = new FormData(this);
-            let data = {};
-            formData.forEach((value, key) => {
-                data[key] = value;
-            });
-
-            console.log('送信されたデータ:', data);
-            // ここでサーバーにデータを送信するコードを追加できます
-        });
-    </script>
+        <form name="form_273" action="https://form.k3r.jp/gladcube/trial" method="POST" enctype="multipart/form-data" class="trial_register sitest-form" novalidate="novalidate" data-gtm-form-interact-id="0">
+          <p class="form_inline-maintext">いますぐ無料で<br class="regist_br">お試しください。</p>
+          <p class="form_inline-subtext">トライアル終了後も無料で<br class="regist_br">ご利用いただけます。</p>
+          <div class="regist_form-input regist_input-name"><span class="regist_form-title">お名前</span><span class="regist_form-required">【必須】</span><br>
+            <div class="form-register-name">
+              <input type="text" name="f_item_name_last" required="" placeholder="姓" class="regist_input-text f_item_name_last valid sitest-input-error" aria-required="true" aria-invalid="false" aria-expanded="false" data-gtm-form-interact-field-id="0">
+              <input type="text" name="f_item_name_first" required="" placeholder="名" class="regist_input-text f_item_name_first error" aria-required="true" aria-invalid="true"><label id="f_item_name_first-error" class="error" for="f_item_name_first">必須項目です。</label>
+            </div>
+          </div>
+          <div class="regist_form-input regist_input-mail"><span class="regist_form-title">企業メールアドレス</span><span class="regist_form-required">【必須】</span>
+            <input type="email" name="f_item_mail" required="" class="regist_input-text error" aria-required="true" aria-invalid="true"><label id="f_item_mail-error" class="error" for="f_item_mail">必須項目です。</label><span class="regist_form-deny-free-address">※携帯・フリーアドレスは不可</span>
+          </div>
+          <div class="regist_form-input regist_input-phone"><span class="regist_form-title">電話番号</span><span class="regist_form-required">【必須】</span><br>
+            <input type="tel" name="f_item_tel" required="" class="regist_input-text error" aria-required="true" aria-invalid="true"><label id="f_item_tel-error" class="error" for="f_item_tel">必須項目です。</label>
+          </div>
+          <div class="regist_form-input regist_input-checkbox">
+            <input type="checkbox" name="f_item_checkbox" required="" class="regist_input-checkbox valid" aria-required="true" data-gtm-form-interact-field-id="1" aria-invalid="false"><label id="f_item_checkbox-error" class="error" for="f_item_checkbox" style="display: none;"></label>
+            <p>『<a href="https://sitest.jp/treaty.html" target="_blank">利用規約</a>』『<a href="https://sitest.jp/privacy.html" target="_blank">プライバシーポリシー</a>』に同意する</p>
+          </div>
+          <div class="hidden-required-inputs">
+            <input type="hidden" name="api_key" value="204b76fca960abe8918df51648eb2780d1bac8f2">
+            <input type="hidden" name="opt" value="1">
+            <input type="hidden" name="red" value="https://sitest.jp/thanks/register.html">
+            <input type="hidden" name="test_mode" value="false">
+            <input type="hidden" name="test_mail" value="">
+            <input type="hidden" name="red_error" value="">
+            <input type="hidden" name="tag" value="">
+          </div>
+          <button type="submit" name="submit-btn" class="form_button submit">無料トライアルに<br class="regist_br">申し込む</button>
+        </form>
     </main>
     <footer>
         <p>© 2024 会社名</p>
