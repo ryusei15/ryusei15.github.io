@@ -7,13 +7,22 @@
     <link rel="stylesheet" href="styles.css">
     
 </head>
-<script>
+<!-- <script>
 (function(PID){
   var script = document.createElement("script");
   script.src = "https://tracking.sitest.jp/tag?p=" + PID + "&u=" + encodeURIComponent(location.origin + location.pathname + location.search);
   script.async = true;
   document.head.appendChild(script);
 })("p672dde8240a07");
+</script> -->
+
+    <script>
+(function(PID){
+  var script = document.createElement("script");
+  script.src = "https://tracking.sitest.jp/tag?p=" + PID + "&u=" + encodeURIComponent(location.origin + location.pathname + location.search);
+  script.async = true;
+  document.head.appendChild(script);
+})("p67529f9d517b2");
 </script>
 <body>
     <header>
@@ -39,7 +48,7 @@
           <div class="regist_form-input regist_input-mail"><span class="regist_form-title">企業メールアドレス</span><span class="regist_form-required">【必須】</span>
             <input type="email" name="f_item_mail" required="" class="regist_input-text error" aria-required="true" aria-invalid="true"><label id="f_item_mail-error" class="error" for="f_item_mail">必須項目です。</label><span class="regist_form-deny-free-address">※携帯・フリーアドレスは不可</span>
           </div>
-          <div class="regist_form-input regist_input-phone"><span class="regist_form-title">電話番号</span><span class="regist_form-required">【必須】</span><br>
+          <div style="display: none;" class="regist_form-input regist_input-phone"><span class="regist_form-title">電話番号</span><span class="regist_form-required">【必須】</span><br>
             <input type="tel" name="f_item_tel" required="" class="regist_input-text error" aria-required="true" aria-invalid="true"><label id="f_item_tel-error" class="error" for="f_item_tel">必須項目です。</label>
           </div>
           <div class="regist_form-input regist_input-checkbox">
