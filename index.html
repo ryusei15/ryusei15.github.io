@@ -15,12 +15,19 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     
 </head>
 <script>
-(function(PID){
+/* (function(PID){
   var script = document.createElement("script");
   script.src = "https://tracking.sitest.jp/tag?p=" + PID + "&u=" + encodeURIComponent(location.origin + location.pathname + location.search);
   script.async = true;
   document.head.appendChild(script);
-})("p67d9177f9635a");
+})("p67d9177f9635a"); */
+    //ローカルステージングDB
+   (function(PID){
+  var script = document.createElement("script");
+  script.src = "http://localhost:8080/tag?p=" + PID + "&u=" + encodeURIComponent(location.origin + location.pathname + location.search);
+  script.async = true;
+  document.head.appendChild(script);
+})("p67d7b8044d9c0");
 </script>
 <!-- <script>
   (function(PID){
