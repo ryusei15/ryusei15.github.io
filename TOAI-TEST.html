@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <title>window.load 実験ページ</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- ▼ 非ブロッキング版「期限付き」計測タグ（5秒で諦めて無視） -->
+  <script>
+  (async function loadMeasurementWithDeadline(PID, deadlineMs) {
+    const url = "https://tracking.sitest.jp/tag?p=" + encodeURIComponent(PID) +
+                "&u=" + encodeURIComponent(location.origin + location.pathname + location.search);
+
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), deadlineMs);
+
+    try {
+      const res = await fetch(url, { signal: controller.signal, cache: "no-store" });
+      if (!res.ok) throw new Error("HTTP " + res.status);
+      const code = await res.text(); // 期限内に取得できた -> 実行
+
+      // Blob URL 経由で実行（evalを避け、CSPに比較的優しい）
+      const blob = new Blob([code], { type: "text/javascript" });
+      const blobUrl = URL.createObjectURL(blob);
+      const s = document.createElement("script");
+      s.type = "module";
+      s.src = blobUrl;
+      s.onload = s.onerror = () => URL.revokeObjectURL(blobUrl);
+      document.head.appendChild(s);
+      console.log("[meas] executed within deadline");
+    } catch (e) {
+      // 期限切れ(AbortError)や取得失敗は“無視”
+      console.warn("[meas] skipped:", e.name || e);
+    } finally {
+      clearTimeout(timer);
+    }
+  })("p67d9177f9635a", 5000);
+  </script>
+  <!-- ▲ 非ブロッキング計測タグ（window.load をブロックしない） -->
+
+  <!-- ▼ あえて window.load を遅らせる“スリープする想定”の外部スクリプト -->
+  <!-- 実験用：実在の遅延JSに差し替えてください -->
+  <script async src="https://your-slow-host.example.com/sleep-10s.js"></script>
+  <!-- ▲ この <script> はサブリソースのため、応答完了/エラーまで window.load が発火しません -->
+
+  <style>
+    body { font-family: system-ui, -apple-system, sans-serif; padding: 24px; }
+    .status { padding: 12px; border: 1px solid #ddd; border-radius: 8px; }
+    .ok { color: #0a0; }
+    .wait { color: #c70; }
+  </style>
+</head>
+<body>
+  <h1>window.load 実験</h1>
+  <p>このページでは以下を確認できます：</p>
+  <ul>
+    <li><strong>非ブロッキング計測タグ</strong>は5秒以内なら実行、超えたら無視（<code>window.load</code>に影響なし）</li>
+    <li><strong>スリープする外部スクリプト</strong>は <code>window.load</code> を遅らせる</li>
+  </ul>
+
+  <div class="status">
+    <div id="dom">DOMContentLoaded: <span class="wait">待機中…</span></div>
+    <div id="load">window.load: <span class="wait">待機中…</span></div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      document.querySelector('#dom span').textContent = '発火しました';
+      document.querySelector('#dom span').className = 'ok';
+      console.log('DOMContentLoaded fired');
+    });
+
+    window.addEventListener('load', () => {
+      document.querySelector('#load span').textContent = '発火しました';
+      document.querySelector('#load span').className = 'ok';
+      alert('window.load が発火しました'); // 要件どおり
+      console.log('window.load fired');
+    }, { once: true });
+  </script>
+
+  <!-- 実験メモ：
+       - your-slow-host のスクリプトを外す/速いものにすると、load アラートが早く出ます。
+       - 計測タグ(非ブロッキング)は5秒で諦めるため、load タイミングに影響しません。 -->
+</body>
+</html>
