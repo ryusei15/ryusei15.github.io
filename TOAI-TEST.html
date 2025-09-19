@@ -36,12 +36,9 @@
     }
   })("p67d9177f9635a", 5000);
   </script>
-  <!-- ▲ 非ブロッキング計測タグ（window.load をブロックしない） -->
 
-  <!-- ▼ あえて window.load を遅らせる“スリープする想定”の外部スクリプト -->
-  <!-- 実験用：実在の遅延JSに差し替えてください -->
-  <script async src="https://your-slow-host.example.com/sleep-10s.js"></script>
-  <!-- ▲ この <script> はサブリソースのため、応答完了/エラーまで window.load が発火しません -->
+  <!-- スリープする想定の外部スクリプト -->
+  <script async src="<script async src="https://ryusei15.github.io/TOAI-TEST.js "></script>"></script>
 
   <style>
     body { font-family: system-ui, -apple-system, sans-serif; padding: 24px; }
@@ -77,9 +74,5 @@
       console.log('window.load fired');
     }, { once: true });
   </script>
-
-  <!-- 実験メモ：
-       - your-slow-host のスクリプトを外す/速いものにすると、load アラートが早く出ます。
-       - 計測タグ(非ブロッキング)は5秒で諦めるため、load タイミングに影響しません。 -->
 </body>
 </html>
