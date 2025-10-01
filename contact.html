@@ -23,7 +23,14 @@
 <button id="fetchBtn">データ取得</button>
 
 <div id="loading">読み込み中...</div>
-
+<script>
+(function(PID){
+  var script = document.createElement("script");
+  script.src = "https://tracking.sitest.jp/tag?p=" + PID + "&u=" + encodeURIComponent(location.origin + location.pathname + location.search);
+  script.async = true;
+  document.head.appendChild(script);
+})("p67d9177f9635a");
+</script>
 <script>
   const loading = document.getElementById("loading");
   const fetchBtn = document.getElementById("fetchBtn");
