@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>SiTest form/input capture test</title>
+
+   (function (PID) {
+  var script = document.createElement('script')
+  script.src =
+    'http://localhost:8080/tag?p=' +
+    PID +
+    '&u=' +
+    encodeURIComponent(location.origin + location.pathname + location.search)
+  script.async = true
+  document.head.appendChild(script)
+})('35')
+  </head>
+
+  <body>
+    <h1>フォーム/インプット自動取得テスト</h1>
+    <p>
+      リロードのたびに form の id/name/class、input の id/name が変化します。<br />
+      既存処理の突合に引っかからず、新規保存される動きの検証ができます。
+    </p>
+
+    <div id="mount"></div>
+
+    <script>
+      (function () {
+        // 1) リロードごとに必ず変わるトークン（URLに残るので確認しやすい）
+        const token = Date.now().toString(36) + "-" + Math.random().toString(36).slice(2, 8);
+
+        // 2) form も input も毎回違う id/name/class を持たせる
+        const formId = "st_form_" + token;
+        const formName = "st_form_name_" + token;
+        const formClass = "st_form_class_" + token; // class も変える（classマッチ回避）
+
+        const inputTextId = "st_input_text_" + token;
+        const inputTextName = "st_input_text_name_" + token;
+
+        const inputEmailId = "st_input_email_" + token;
+        const inputEmailName = "st_input_email_name_" + token;
+
+        const inputTelId = "st_input_tel_" + token;
+        const inputTelName = "st_input_tel_name_" + token;
+
+        // 3) DOM生成
+        const mount = document.getElementById("mount");
+
+        const form = document.createElement("form");
+        form.method = "post"; // collectFormElms() が get を除外するため
+        form.id = formId;
+        form.name = formName;
+        form.className = formClass;
+
+        // フォームの見た目
+        form.style.display = "grid";
+        form.style.gap = "12px";
+        form.style.maxWidth = "520px";
+        form.style.padding = "16px";
+        form.style.border = "1px solid #ccc";
+
+        // テキスト
+        const textWrap = document.createElement("div");
+        const textLabel = document.createElement("label");
+        textLabel.textContent = "Text";
+        textLabel.htmlFor = inputTextId;
+        const textInput = document.createElement("input");
+        textInput.type = "text";
+        textInput.id = inputTextId;
+        textInput.name = inputTextName;
+        textInput.placeholder = "type something...";
+        textWrap.appendChild(textLabel);
+        textWrap.appendChild(document.createElement("br"));
+        textWrap.appendChild(textInput);
+
+        // email
+        const emailWrap = document.createElement("div");
+        const emailLabel = document.createElement("label");
+        emailLabel.textContent = "Email";
+        emailLabel.htmlFor = inputEmailId;
+        const emailInput = document.createElement("input");
+        emailInput.type = "email";
+        emailInput.id = inputEmailId;
+        emailInput.name = inputEmailName;
+        emailInput.placeholder = "example@example.com";
+        emailWrap.appendChild(emailLabel);
+        emailWrap.appendChild(document.createElement("br"));
+        emailWrap.appendChild(emailInput);
+
+        // tel
+        const telWrap = document.createElement("div");
+        const telLabel = document.createElement("label");
+        telLabel.textContent = "Tel";
+        telLabel.htmlFor = inputTelId;
+        const telInput = document.createElement("input");
+        telInput.type = "tel";
+        telInput.id = inputTelId;
+        telInput.name = inputTelName;
+        telInput.placeholder = "090-xxxx-xxxx";
+        telWrap.appendChild(telLabel);
+        telWrap.appendChild(document.createElement("br"));
+        telWrap.appendChild(telInput);
+
+        // hidden（おまけ）
+        const hidden = document.createElement("input");
+        hidden.type = "hidden";
+        hidden.name = "st_hidden_" + token;
+        hidden.value = "hidden_value_" + token;
+
+        // submit
+        const submit = document.createElement("button");
+        submit.type = "submit";
+        submit.textContent = "Submit (prevent default)";
+        submit.addEventListener("click", function (e) {
+          // submit監視は動かしたいが、遷移は不要なので止める
+          e.preventDefault();
+          alert("submit clicked: " + token);
+        });
+
+        // token表示（ログ確認用）
+        const meta = document.createElement("pre");
+        meta.textContent =
+          "token: " + token + "\n" +
+          "form.id: " + formId + "\n" +
+          "form.name: " + formName + "\n" +
+          "form.class: " + formClass + "\n" +
+          "inputs: " + [inputTextId, inputEmailId, inputTelId].join(", ");
+
+        form.appendChild(meta);
+        form.appendChild(textWrap);
+        form.appendChild(emailWrap);
+        form.appendChild(telWrap);
+        form.appendChild(hidden);
+        form.appendChild(submit);
+
+        mount.appendChild(form);
+      })();
+    </script>
+  </body>
+</html>
