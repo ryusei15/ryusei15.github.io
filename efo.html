@@ -5,16 +5,13 @@
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>SiTest form/input capture test</title>
 <script>
- /* (function (PID) {
-    var script = document.createElement('script')
-    script.src =
-      'http://localhost:8080/tag?p=' +
-      PID +
-      '&u=' +
-      encodeURIComponent(location.origin + location.pathname + location.search)
-    script.async = true
-    document.head.appendChild(script)
-  })('35') */
+  // dev環境 ryusei
+(function(PID){
+  var script = document.createElement("script");
+  script.src = "https://tracking-dev.sitest.jp/tag?p=" + PID + "&u=" + encodeURIComponent(location.origin + location.pathname + location.search);
+  script.async = true;
+  document.head.appendChild(script);
+})("p67d7b8044d9c0");
 </script>
      
   </head>
@@ -140,6 +137,7 @@
         mount.appendChild(form);
       })();
     </script>
-    <script src="http://localhost/tracking/sitest_js?p=35&dynamic=true" async></script><script type="text/javascript">window.sitest_sent_html = document.getElementsByTagName("html")[0].outerHTML;</script>
+    // dev環境　旧タグ
+    <script src="http://dev.sitest.jp/tracking/sitest_js?p=p67d7b8044d9c0&dynamic=true" async></script><script type="text/javascript">window.sitest_sent_html = document.getElementsByTagName("html")[0].outerHTML;</script>
   </body>
 </html>
