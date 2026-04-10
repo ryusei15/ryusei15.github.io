@@ -11,7 +11,7 @@
         
 (function(PID){
   var script = document.createElement("script");
-  script.src = "http://127.0.0.1/tag?p=" + PID + "&u=" + encodeURIComponent(location.origin + location.pathname + location.search);
+  script.src = "http://loalhost:8080/tag?p=" + PID + "&u=" + encodeURIComponent(location.origin + location.pathname + location.search);
   script.async = true;
   document.head.appendChild(script);
 })("p67d7b8044d9c0");
