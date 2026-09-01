@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>状態・イベント | Web検証ラボ</title>
+  <link rel="stylesheet" href="assets/styles/verification-suite-base.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">本文へ移動</a>
+  <header class="site-header"><div class="nav-wrap"><a class="brand" href="verification-suite-overview.html">Web検証ラボ</a><nav class="site-nav" aria-label="メインナビゲーション"><ul><li><a href="verification-suite-overview.html">概要</a></li><li><a href="semantic-content-elements-showcase.html">要素</a></li><li><a href="interactive-form-controls-laboratory.html">フォーム</a></li><li><a href="responsive-layout-behavior-gallery.html">レイアウト</a></li><li><a href="browser-state-event-interaction-testbed.html" aria-current="page">状態・イベント</a></li></ul></nav></div></header>
+  <main id="main" class="page-shell">
+    <section class="hero"><p class="eyebrow">States &amp; events</p><h1>状態・イベント</h1><p class="lede">CSS疑似クラスとブラウザ標準機能だけで、ポインター、キーボード、URLフラグメント、編集、ドラッグの反応を確認します。</p></section>
+
+    <section id="event-test-area" class="section" aria-labelledby="pointer-title">
+      <h2 id="pointer-title">ポインターとフォーカス</h2>
+      <div class="grid">
+        <div class="card"><div class="state-box" tabindex="0" data-event-name="状態ボックス"><strong>Hover / Focus</strong><p>マウスを重ねるか、Tabキーでフォーカスしてください。</p></div></div>
+        <div class="card"><h3>リンク状態</h3><p><a href="#visited-sample" data-event-name="ページ内リンク">ページ内リンク</a></p><p><a href="https://example.com">外部リンク</a></p><button type="button" data-event-name="通常ボタン">通常ボタン</button></div>
+        <div class="card"><h3>入力状態</h3><label for="focus-input">Focus / Validity</label><input id="focus-input" data-event-name="メール入力" type="email" placeholder="email@example.com" required></div>
+      </div>
+      <div class="card card--full">
+        <div class="section-heading"><h3>イベントログ</h3><button id="clear-log" type="button" class="button--secondary">クリア</button></div>
+        <ol id="event-log" class="event-log" aria-live="polite"><li>上の要素を操作すると最大30件まで記録します。</li></ol>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="toggle-title">
+      <h2 id="toggle-title">checked と target</h2>
+      <div class="grid">
+        <div class="card card--wide">
+          <input class="toggle-control" id="css-toggle" type="checkbox">
+          <label class="button toggle-label" for="css-toggle">CSSだけで表示切替</label>
+          <div class="toggle-panel"><strong>表示されました。</strong><p><code>:checked</code> と隣接セレクタによる切り替えです。</p></div>
+        </div>
+        <div class="card"><a class="button button--secondary" href="#target-panel">:target を表示</a><p id="target-panel" class="target-demo">URLフラグメントに反応しました。<a href="#toggle-title">閉じる</a></p></div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="native-event-title">
+      <h2 id="native-event-title">編集・ドラッグ・開閉</h2>
+      <div class="grid">
+        <div class="card"><h3>contenteditable</h3><div contenteditable="true" role="textbox" aria-label="編集可能なテキスト">この文章は直接編集できます。入力、選択、コピー、貼り付け、Undoを確認してください。</div></div>
+        <div class="card"><h3>Drag &amp; Drop</h3><div id="drag-source" class="drag-item" draggable="true">この要素をドラッグ</div><div id="drop-zone" class="drop-zone">ここへドロップ</div></div>
+        <div class="card"><h3>details toggle</h3><details><summary>開閉して状態を確認</summary><p>JavaScriptなしのネイティブ開閉要素です。</p></details></div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="dialog-title">
+      <h2 id="dialog-title">モーダルダイアログ</h2>
+      <div class="card card--full"><button id="open-dialog" type="button">dialogを開く</button><p class="help-text">Esc、背景クリック、閉じるボタンを試してください。</p></div>
+      <dialog id="test-dialog" aria-labelledby="dialog-heading"><h3 id="dialog-heading">ネイティブ dialog</h3><p>フォーカストラップ、背景、Escキーによるcancelイベントを確認できます。</p><div class="action-row"><button id="close-dialog" type="button">閉じる</button></div></dialog>
+    </section>
+
+    <section class="section" aria-labelledby="collision-title">
+      <h2 id="collision-title">ライブラリ干渉用クラス</h2>
+      <div class="card card--full collision-zone">
+        <p>外部CSSを読み込んだときに衝突しやすい一般名を意図的に並べています。</p>
+        <div class="container">.container<div class="row">.row<div class="col">.col</div></div></div>
+        <span class="btn">.btn</span><span class="active">.active</span><span class="hidden">.hidden</span>
+      </div>
+    </section>
+
+    <section id="visited-sample" class="section" aria-labelledby="keyboard-title">
+      <h2 id="keyboard-title">キーボード確認</h2>
+      <div class="card card--full"><p>Tab / Shift+Tabで移動し、Enter / Spaceで操作してください。先頭のスキップリンク、ナビゲーション、ボタン、入力、開閉要素が順番にフォーカスされます。</p><div class="action-row"><a class="button" href="#main" accesskey="m">本文先頭へ（Accesskey M）</a><button type="button">フォーカス対象</button></div></div>
+    </section>
+  </main>
+  <footer class="site-footer"><div class="site-footer__inner"><small><a href="verification-suite-overview.html">概要へ戻る</a></small></div></footer>
+  <script src="assets/scripts/interactive-test-runner.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>レイアウト | Web検証ラボ</title>
+  <link rel="stylesheet" href="assets/styles/verification-suite-base.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">本文へ移動</a>
+  <header class="site-header"><div class="nav-wrap"><a class="brand" href="verification-suite-overview.html">Web検証ラボ</a><nav class="site-nav" aria-label="メインナビゲーション"><ul><li><a href="verification-suite-overview.html">概要</a></li><li><a href="semantic-content-elements-showcase.html">要素</a></li><li><a href="interactive-form-controls-laboratory.html">フォーム</a></li><li><a href="responsive-layout-behavior-gallery.html" aria-current="page">レイアウト</a></li><li><a href="browser-state-event-interaction-testbed.html">状態・イベント</a></li></ul></nav></div></header>
+  <main id="main" class="page-shell">
+    <section class="hero"><p class="eyebrow">Layout</p><h1>レイアウト</h1><p class="lede">Grid、Flexbox、overflow、sticky、長い文字列、異なる画面幅での折り返しを確認します。</p></section>
+
+    <section class="section" aria-labelledby="grid-title">
+      <h2 id="grid-title">CSS Grid</h2>
+      <div class="card card--full"><div class="layout-demo" aria-label="グリッドレイアウト例"><header class="layout-demo__head">Header</header><aside class="layout-demo__side">Sidebar</aside><main class="layout-demo__main">Main content</main><footer class="layout-demo__foot">Footer</footer></div></div>
+    </section>
+
+    <section class="section" aria-labelledby="flex-title">
+      <h2 id="flex-title">Flexbox</h2>
+      <div class="card card--full"><div class="flex-demo" aria-label="フレックスレイアウト例"><div>1</div><div>2</div><div>3</div><div>4</div><div>5</div></div></div>
+    </section>
+
+    <section class="section" aria-labelledby="overflow-title">
+      <h2 id="overflow-title">スクロールと固定位置</h2>
+      <div class="grid">
+        <div class="card card--wide">
+          <h3>縦スクロール領域</h3>
+          <div class="scroll-box" tabindex="0"><p><strong>スクロール開始</strong></p><p>同じ領域内で複数段落を表示し、ホイール、タッチ、キーボード操作を確認します。</p><p>スクロールバーの表示方法はOSやブラウザ設定により異なります。</p><p>フォーカスした状態では矢印キーやPage Downでも移動できます。</p><p><strong>スクロール終端</strong></p></div>
+        </div>
+        <aside class="card"><p class="sticky-note">Sticky sample</p><p>ページをスクロールし、ヘッダーとこの要素の固定挙動を比較します。</p></aside>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="stress-title">
+      <h2 id="stress-title">表示ストレステスト</h2>
+      <div class="grid">
+        <article class="card"><h3>日本語の長文</h3><p>句読点を含む日本語文章が狭いカード内でも自然に折り返され、文字が重なったり領域からはみ出したりしないことを確認するためのサンプルテキストです。</p></article>
+        <article class="card"><h3>English text</h3><p>Responsive layouts should preserve a readable line length while allowing components to shrink without unexpected clipping or overlap.</p></article>
+        <article class="card"><h3>長い連続文字</h3><p style="overflow-wrap:anywhere">very-long-unbroken-token_ABCDEFGHIJKLMNOPQRSTUVWXYZ_0123456789_abcdefghijklmnopqrstuvwxyz</p></article>
+        <article class="card card--full"><h3>横幅比較</h3><p>ブラウザの開発者ツールで <code>320px</code>、<code>580px</code>、<code>820px</code>、<code>1180px</code> を境にナビゲーション、カード列、フォーム列が変化することを確認してください。</p></article>
+      </div>
+    </section>
+  </main>
+  <footer class="site-footer"><div class="site-footer__inner"><small><a href="verification-suite-overview.html">概要へ戻る</a></small></div></footer>
+  <script src="assets/scripts/interactive-test-runner.js" defer></script>
+</body>
+</html>

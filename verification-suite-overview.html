@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="HTML要素・状態・レイアウト・干渉を横断的に確認する検証ページ集">
+  <title>Web検証ラボ</title>
+  <link rel="stylesheet" href="assets/styles/verification-suite-base.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">本文へ移動</a>
+  <header class="site-header">
+    <div class="nav-wrap">
+      <a class="brand" href="verification-suite-overview.html">Web検証ラボ</a>
+      <nav class="site-nav" aria-label="メインナビゲーション">
+        <ul>
+          <li><a href="verification-suite-overview.html" aria-current="page">概要</a></li>
+          <li><a href="semantic-content-elements-showcase.html">要素</a></li>
+          <li><a href="interactive-form-controls-laboratory.html">フォーム</a></li>
+          <li><a href="responsive-layout-behavior-gallery.html">レイアウト</a></li>
+          <li><a href="browser-state-event-interaction-testbed.html">状態・イベント</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main" class="page-shell">
+    <section class="hero">
+      <p class="eyebrow">HTML / CSS verification pages</p>
+      <h1>Web検証ラボ</h1>
+      <p class="lede">ブラウザ標準の要素、入力状態、レスポンシブ表示、アクセシビリティ、外部CSSとのクラス衝突をまとめて確認するための静的ページ集です。</p>
+      <div class="action-row">
+        <a class="button" href="semantic-content-elements-showcase.html">検証を始める</a>
+        <a class="button button--secondary" href="#checklist">チェック項目</a>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="pages-title">
+      <div class="section-heading">
+        <h2 id="pages-title">検証ページ</h2>
+        <span class="status">5 pages</span>
+      </div>
+      <div class="grid">
+        <article class="card">
+          <p class="eyebrow">01</p>
+          <h3>HTML要素</h3>
+          <p>見出し、文章、リスト、表、引用、コード、開閉要素、メーターなどを確認します。</p>
+          <a href="semantic-content-elements-showcase.html">要素ページを開く</a>
+        </article>
+        <article class="card">
+          <p class="eyebrow">02</p>
+          <h3>フォーム</h3>
+          <p>主要な入力型、選択肢、バリデーション、無効・読み取り専用状態を確認します。</p>
+          <a href="interactive-form-controls-laboratory.html">フォームページを開く</a>
+        </article>
+        <article class="card">
+          <p class="eyebrow">03</p>
+          <h3>レイアウト</h3>
+          <p>Grid、Flexbox、スクロール、sticky、長文、レスポンシブ表示を確認します。</p>
+          <a href="responsive-layout-behavior-gallery.html">レイアウトページを開く</a>
+        </article>
+        <article class="card">
+          <p class="eyebrow">04</p>
+          <h3>状態・イベント</h3>
+          <p>hover、focus、target、checked、編集、ドラッグなどの挙動を確認します。</p>
+          <a href="browser-state-event-interaction-testbed.html">状態ページを開く</a>
+        </article>
+        <article class="card card--wide">
+          <p class="eyebrow">Design policy</p>
+          <h3>検証しやすい共通設計</h3>
+          <ul class="tag-list">
+            <li class="tag">ライト / ダーク</li>
+            <li class="tag">キーボード操作</li>
+            <li class="tag">320px〜</li>
+            <li class="tag">印刷CSS</li>
+            <li class="tag">Reduced Motion</li>
+            <li class="tag">JavaScript不要</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <section id="checklist" class="section" aria-labelledby="check-title">
+      <h2 id="check-title">推奨チェックリスト</h2>
+      <div class="grid">
+        <div class="card card--full">
+          <ol>
+            <li>マウス、キーボード、タッチ操作で各要素を確認する。</li>
+            <li>画面幅を320px、768px、1280px以上に切り替える。</li>
+            <li>OSのライト / ダークテーマと文字拡大を切り替える。</li>
+            <li>外部CSSを追加し、余白・色・クラス名の衝突を比較する。</li>
+            <li>印刷プレビューとブラウザ標準の入力バリデーションを確認する。</li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="environment-title">
+      <h2 id="environment-title">現在の実行環境</h2>
+      <div class="card card--full" id="environment-data">
+        <dl class="data-grid">
+          <div><dt>Viewport</dt><dd data-env="viewport">JavaScript無効</dd></div>
+          <div><dt>Pixel ratio</dt><dd data-env="pixelRatio">—</dd></div>
+          <div><dt>Network</dt><dd data-env="online">—</dd></div>
+          <div><dt>Language</dt><dd data-env="language">—</dd></div>
+          <div><dt>Color scheme</dt><dd data-env="colorScheme">—</dd></div>
+          <div><dt>Motion</dt><dd data-env="reducedMotion">—</dd></div>
+        </dl>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer"><div class="site-footer__inner"><small>Static verification suite — HTML + CSS only</small></div></footer>
+  <script src="assets/scripts/interactive-test-runner.js" defer></script>
+</body>
+</html>

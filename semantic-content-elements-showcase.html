@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>HTML要素 | Web検証ラボ</title>
+  <link rel="stylesheet" href="assets/styles/verification-suite-base.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">本文へ移動</a>
+  <header class="site-header"><div class="nav-wrap"><a class="brand" href="verification-suite-overview.html">Web検証ラボ</a><nav class="site-nav" aria-label="メインナビゲーション"><ul><li><a href="verification-suite-overview.html">概要</a></li><li><a href="semantic-content-elements-showcase.html" aria-current="page">要素</a></li><li><a href="interactive-form-controls-laboratory.html">フォーム</a></li><li><a href="responsive-layout-behavior-gallery.html">レイアウト</a></li><li><a href="browser-state-event-interaction-testbed.html">状態・イベント</a></li></ul></nav></div></header>
+  <main id="main" class="page-shell">
+    <section class="hero"><p class="eyebrow">Elements</p><h1>HTML要素</h1><p class="lede">テキスト、意味構造、データ表示、ネイティブUI要素の既定表示と共通CSSの影響を確認します。</p></section>
+
+    <section class="section" aria-labelledby="text-title">
+      <h2 id="text-title">文章とインライン要素</h2>
+      <div class="grid">
+        <article class="card card--wide">
+          <h3>見出しレベル3</h3>
+          <p>これは通常の段落です。<strong>重要な内容</strong>、<em>強調</em>、<mark>ハイライト</mark>、<small>小さい注記</small>、<del>削除</del>、<ins>追加</ins>を含みます。</p>
+          <p><abbr title="HyperText Markup Language">HTML</abbr>、H<sub>2</sub>O、E=mc<sup>2</sup>、<time datetime="2026-09-01">2026年9月1日</time>、<data value="A-1024">商品A-1024</data>。</p>
+          <p>長いURL: <a href="https://example.com/a/very/long/path/for/wrapping/verification">https://example.com/a/very/long/path/for/wrapping/verification</a></p>
+          <hr>
+          <address>検証担当: <a href="mailto:test@example.com">test@example.com</a></address>
+        </article>
+        <aside class="card">
+          <h3>引用</h3>
+          <blockquote cite="https://example.com"><p>引用文の余白、行長、引用符の表現を確認します。</p><footer>— <cite>検証用サンプル</cite></footer></blockquote>
+          <p>短い引用は <q>このように表示</q> されます。</p>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="list-title">
+      <h2 id="list-title">リスト</h2>
+      <div class="grid">
+        <div class="card"><h3>順序なし</h3><ul><li>第一項目</li><li>第二項目<ul><li>ネスト項目</li></ul></li><li>第三項目</li></ul></div>
+        <div class="card"><h3>順序あり</h3><ol start="3" reversed><li>第三段階</li><li>第二段階</li><li>第一段階</li></ol></div>
+        <div class="card"><h3>説明リスト</h3><dl><dt><strong>用語A</strong></dt><dd>用語Aの説明です。</dd><dt><strong>用語B</strong></dt><dd>用語Bの説明です。</dd></dl></div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="table-title">
+      <h2 id="table-title">表</h2>
+      <div class="card card--full table-wrap">
+        <table>
+          <caption>四半期ごとの検証件数</caption>
+          <colgroup><col><col span="3"></colgroup>
+          <thead><tr><th scope="col">カテゴリ</th><th scope="col">Q1</th><th scope="col">Q2</th><th scope="col">合計</th></tr></thead>
+          <tbody><tr><th scope="row">表示</th><td>18</td><td>24</td><td>42</td></tr><tr><th scope="row">操作</th><td>12</td><td>16</td><td>28</td></tr><tr><th scope="row">互換性</th><td colspan="2">継続測定</td><td>15</td></tr></tbody>
+          <tfoot><tr><th scope="row">総計</th><td>30</td><td>40</td><td>85</td></tr></tfoot>
+        </table>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="native-title">
+      <h2 id="native-title">ネイティブUIとコード</h2>
+      <div class="grid">
+        <div class="card card--wide">
+          <details open><summary>最初から開いている詳細</summary><p><code>details</code> と <code>summary</code> の開閉、フォーカス、余白を確認します。</p></details>
+          <details><summary>閉じている詳細</summary><p>クリックまたはキーボードで開閉できます。</p></details>
+        </div>
+        <div class="card">
+          <h3>進捗と測定値</h3>
+          <label for="progress">処理進捗 68%</label><progress id="progress" max="100" value="68">68%</progress>
+          <label for="meter">品質スコア 82/100</label><meter id="meter" min="0" max="100" low="40" high="75" optimum="90" value="82">82</meter>
+        </div>
+        <div class="card card--full">
+          <h3>コード表現</h3>
+          <p><kbd>Ctrl</kbd> + <kbd>S</kbd> を押すと、<samp>Saved successfully</samp> と表示される想定です。</p>
+          <pre><code>&lt;article class="sample"&gt;
+  &lt;h2&gt;検証用マークアップ&lt;/h2&gt;
+&lt;/article&gt;</code></pre>
+        </div>
+      </div>
+    </section>
+  </main>
+  <footer class="site-footer"><div class="site-footer__inner"><small><a href="verification-suite-overview.html">概要へ戻る</a></small></div></footer>
+  <script src="assets/scripts/interactive-test-runner.js" defer></script>
+</body>
+</html>
